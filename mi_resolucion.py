@@ -1,5 +1,5 @@
-list = []
-option = 0
+lista_estudiantes = []
+validated_option = 0
 
 def main():
     print("="*3, "Main Menu", "="*3)
@@ -21,17 +21,20 @@ def agregar_estudiante(lista):
              nombre = input("Ingrese el nombre del estudiante: ")
              if not estudiante_validation(nombre):
                    print("Este campo no puede estar vacio.")
-                   return
+                   return 
              
              matricula = input("Ingrese el ID del Estudiante: ")
-             matricula_validated = matricula_validation(matricula)
-             if not matricula_validated:
+             if not matricula_validation(matricula):
                 print("EL número de ID tiene que ser igual o mayor a 0.")
                 return
+             id_verificado = int(matricula)
+             for i in lista:
+                   if i['matricula'] == id_verificado:
+                         print("2 Estudiantes no pueden tener el mismo ID.")
+                         return
 
              nota_promedio = input("Ingrese la nota promedio del Estudiante: ")
-             promedio_validated = promedio_validation(nota_promedio)
-             if not promedio_validated:
+             if not promedio_validation(nota_promedio):
                    print("La nota debe ser entre 1.0 y 7.0.")
                    return
              
@@ -41,22 +44,24 @@ def agregar_estudiante(lista):
                    'nota_promedio': float(nota_promedio),
                    'aprobado': False
              }
+             
              lista.append(alumno)
              print("EL almuno a sido agregado al sistema.")
+
 
 def promedio_validation(promedio):
             try:
                   promedio_int = float(promedio)
                   return 0.9 < promedio_int <= 7.0 
             except ValueError:
-                  return
+                  return False
 
-def matricula_validation(id):
+def matricula_validation(numero):
             try:
-                   id_int = int(id)
-                   return id_int >= 0 
+                   numero_int = int(numero)
+                   return numero_int >= 0 
             except ValueError:
-                return
+                return False
                 
 def estudiante_validation(nombre_str):
              return nombre_str != ""
@@ -67,18 +72,18 @@ def buscar_estudiante(lista, nombre):
                     return i
             return -1
 
-while option != 6:
+while validated_option != 6:
     main()
     validated_option = option_validation()
 
     if validated_option == 1:
-        agregar_estudiante(list)
+        agregar_estudiante(lista_estudiantes)
     elif validated_option == 2:
         nombre = input("Ingrese el nombre de un estudiante a buscar: ")
-        posicion = buscar_estudiante(list, nombre)
+        posicion = buscar_estudiante(lista_estudiantes, nombre)
 
         if posicion != -1:
-            estudiante = list[posicion]
+            estudiante = lista_estudiantes[posicion]
             print(f"Nombre: {estudiante['nombre']}")
             print(f"Matricula: {estudiante['matricula']}")
             print(f"Nota promedio: {estudiante['nota_promedio']}")
