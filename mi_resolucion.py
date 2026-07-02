@@ -1,7 +1,7 @@
 lista_estudiantes = []
 validated_option = 0
 
-def main():
+def main(): #Menu en texto
     print("="*3, "Main Menu", "="*3)
     print("1. Añade un Estudiante")
     print("2. Busca un Estudiante")
@@ -10,14 +10,14 @@ def main():
     print("5. Mostrar Estudiantes")
     print("6. Salir")
 
-def option_validation():
+def option_validation(): #Funcion para validar la opción ingresada
              try:
                  option_str = int(input("Ingrese una opción: "))
                  return option_str
              except ValueError:
                  print("Solo se aceptan números")
 
-def agregar_estudiante(lista):
+def agregar_estudiante(lista): #funcion para agregar estudiantes
              nombre = input("Ingrese el nombre del estudiante: ")
              if not estudiante_validation(nombre):
                    print("Este campo no puede estar vacio.")
@@ -48,7 +48,7 @@ def agregar_estudiante(lista):
              lista.append(alumno)
              print("EL almuno a sido agregado al sistema.")
 
-
+#Inicio: validaciónes
 def promedio_validation(promedio):
             try:
                   promedio_int = float(promedio)
@@ -65,14 +65,20 @@ def matricula_validation(numero):
                 
 def estudiante_validation(nombre_str):
              return nombre_str != ""
+#Fin: Valicadiones
 
-def buscar_estudiante(lista, nombre):
+def buscar_estudiante(lista, nombre): #Funcion para buscar
             for i in range (len(lista)):
                 if nombre.strip().lower() == lista[i]['nombre']:
                     return i
             return -1
 
-while validated_option != 6:
+def actualizar_estudiantes(lista):
+      for i in lista:
+            if i['nota_promedio'] >= 4.0:
+                  i['nota_promedio'] = True
+
+while validated_option != 6: #Menu, solo las opciones
     main()
     validated_option = option_validation()
 
@@ -91,10 +97,32 @@ while validated_option != 6:
             print(f"El estudiante '{nombre}' no se encuentra en nuestro sistema.")
     elif validated_option == 3:
         nombre = input("Ingrese un nombre a eliminar")
+        posicion = buscar_estudiante(lista_estudiantes, nombre)
+
+        if posicion != -1:
+              estudiante = lista_estudiantes[posicion]
+              print(f"El estudiante '{estudiante['nombre']}' eliminado")
+              lista_estudiantes.pop(posicion)
+        else:
+              print(f"EL estudiante '{nombre}' no se encuentra en nuestro sistema.")
     elif validated_option == 4:
-        print()
+        actualizar_estudiantes(lista_estudiantes)
+        print("El estado de aprobación se actualizo")
     elif validated_option == 5:
-        print()
+        actualizar_estudiantes(lista_estudiantes)
+        if lista_estudiantes:
+            for i in lista_estudiantes:
+                print("\n")
+                print(f"Estudiante: {i['nombre']}", "-"*20)
+                print(f"ID: {i['matricula']}")
+                print(f"Nota promedio: {i['nota_promedio']}")
+                if i['aprobado']:
+                    print("¡Aprobado!")
+                else:
+                    print("Lamentablemente, el estudiante desaprobo.")
+                print("\n")
+        else:
+              print("No se encuentra registrado ningun estudiante")
     elif validated_option == 6:
         print("Hasta Luego!")
         break
