@@ -1,130 +1,125 @@
-lista_estudiantes = []
-validated_option = 0
+estudiantes = []
+opcion_prev = 0
 
-def main(): #Menu en texto
-    print("="*3, "Main Menu", "="*3)
-    print("1. Añade un Estudiante")
-    print("2. Busca un Estudiante")
-    print("3. Elimina un Estudiante")
-    print("4. Actualizar Estado de aprovación")
-    print("5. Mostrar Estudiantes")
+def main():
+    print("---- Menu Principal ----")
+    print("1. Añadir Estudiante")
+    print("2. Buscar Estudiante")
+    print("3. Eliminar Estudiante")
+    print("4. Actualizar Estado de Aprobación")
+    print("5. Mostrar todos los Estudiantes")
     print("6. Salir")
 
-def option_validation(): #Funcion para validar la opción ingresada
-             try:
-                 option_str = int(input("Ingrese una opción: "))
-                 return option_str
-             except ValueError:
-                 print("Solo se aceptan números")
+def opción_validación():
+    try:
+        opción_validada = int(input("Elija una opcion 1-6: "))
+        if opción_validada > 6:
+            print("Elija una opción de 1-6.")
+        else:
+            return opción_validada
+    except ValueError:
+        print("Opción invalida")
+        print("Solo se aceptan números")
+        return
 
-def agregar_estudiante(lista): #funcion para agregar estudiantes
-             nombre = input("Ingrese el nombre del estudiante: ")
-             if not estudiante_validation(nombre):
-                   print("Este campo no puede estar vacio.")
-                   return 
-             
-             matricula = input("Ingrese el ID del Estudiante: ")
-             if not matricula_validation(matricula):
-                print("EL número de ID tiene que ser igual o mayor a 0.")
-                return
-             id_verificado = int(matricula)
-             for i in lista:
-                   if i['matricula'] == id_verificado:
-                         print("2 Estudiantes no pueden tener el mismo ID.")
-                         return
+def añadir_estudiante(lista):
+    nombre = input("Cual es el nombre del estudiante a añadir: ")
+    matricula = input(f"Cual es el ID de {nombre}: ")
+    nota_promedio = input("Cual fue la nota promedio del Estudiante: ")
+    if not nombre_validación(nombre):
+        print("EL nombre no puede estar vacio")
+        return
+    if not matricula_validación(matricula):
+        print("Este campo tiene que ser entre 1.0 y 7.0")
+    if not promedio_validación(nota_promedio):
+        print("La nota promedio debe ser 0 o mayor.")
+    
+    estudiante = {
+        'nombre': nombre,
+        'matricula': int(matricula),
+        'nota_promedio': float(nota_promedio),
+        'estado_aprobación': False
+    }
+    lista.append(estudiante)
+    print("El estudiante fue agregado al sistema.")
+#Validaciónes
+def nombre_validación(estudiante):
+    return estudiante != ""
 
-             nota_promedio = input("Ingrese la nota promedio del Estudiante: ")
-             if not promedio_validation(nota_promedio):
-                   print("La nota debe ser entre 1.0 y 7.0.")
-                   return
-             
-             alumno = {
-                   'nombre': nombre,
-                   'matricula': int(matricula),
-                   'nota_promedio': float(nota_promedio),
-                   'aprobado': False
-             }
-             
-             lista.append(alumno)
-             print("EL almuno a sido agregado al sistema.")
+def matricula_validación(matricula_str):
+    try:
+        matricula_int = int(matricula_str)
+        return matricula_int >= 0
+    except ValueError:
+        return False
 
-#Inicio: validaciónes
-def promedio_validation(promedio):
-            try:
-                  promedio_int = float(promedio)
-                  return 0.9 < promedio_int <= 7.0 
-            except ValueError:
-                  return False
+def promedio_validación(nota_str):
+    try:
+        nota_float = int(nota_str)
+        return 0.9 < nota_float < 7.1
+    except ValueError:
+        return False
+#FIN
 
-def matricula_validation(numero):
-            try:
-                   numero_int = int(numero)
-                   return numero_int >= 0 
-            except ValueError:
-                return False
-                
-def estudiante_validation(nombre_str):
-             return nombre_str != ""
-#Fin: Valicadiones
+def buscar_estudiante(lista, estudiante):
+    for i in range (len(lista)):
+        if estudiante.strip().lower() == lista[i]['nombre'].strip().lower():
+            return i
+    return -1
 
-def buscar_estudiante(lista, nombre): #Funcion para buscar
-            for i in range (len(lista)):
-                if nombre.strip().lower() == lista[i]['nombre']:
-                    return i
-            return -1
+def actualizar_aprobacion(lista):
+    for i in lista:
+        if i['nota_promedio'] >= 4.0:
+            i['estado_aprobación'] = True
 
-def actualizar_estudiantes(lista):
-      for i in lista:
-            if i['nota_promedio'] >= 4.0:
-                  i['nota_promedio'] = True
-
-while validated_option != 6: #Menu, solo las opciones
+while opcion_prev != 6:
     main()
-    validated_option = option_validation()
+    opcion_prev = opción_validación()
 
-    if validated_option == 1:
-        agregar_estudiante(lista_estudiantes)
-    elif validated_option == 2:
-        nombre = input("Ingrese el nombre de un estudiante a buscar: ")
-        posicion = buscar_estudiante(lista_estudiantes, nombre)
-
-        if posicion != -1:
-            estudiante = lista_estudiantes[posicion]
-            print(f"Nombre: {estudiante['nombre']}")
-            print(f"Matricula: {estudiante['matricula']}")
-            print(f"Nota promedio: {estudiante['nota_promedio']}")
-        else:
-            print(f"El estudiante '{nombre}' no se encuentra en nuestro sistema.")
-    elif validated_option == 3:
-        nombre = input("Ingrese un nombre a eliminar")
-        posicion = buscar_estudiante(lista_estudiantes, nombre)
+    if opcion_prev == 1:
+        añadir_estudiante(estudiantes)
+    elif opcion_prev == 2:
+        nombre_buscar = input("Ingrese un nombre a buscar: ")
+        posicion = buscar_estudiante(estudiantes, nombre_buscar)
 
         if posicion != -1:
-              estudiante = lista_estudiantes[posicion]
-              print(f"El estudiante '{estudiante['nombre']}' eliminado")
-              lista_estudiantes.pop(posicion)
+            estudiante_encontrado = estudiantes[posicion]
+            print(f"Nombre: {estudiante_encontrado['nombre']}")
+            print(f"ID: {estudiante_encontrado['matricula']}")
+            print(f"Promedio: {estudiante_encontrado['nota_promedio']}")
         else:
-              print(f"EL estudiante '{nombre}' no se encuentra en nuestro sistema.")
-    elif validated_option == 4:
-        actualizar_estudiantes(lista_estudiantes)
-        print("El estado de aprobación se actualizo")
-    elif validated_option == 5:
-        actualizar_estudiantes(lista_estudiantes)
-        if lista_estudiantes:
-            for i in lista_estudiantes:
-                print("\n")
-                print(f"Estudiante: {i['nombre']}", "-"*20)
-                print(f"ID: {i['matricula']}")
-                print(f"Nota promedio: {i['nota_promedio']}")
-                if i['aprobado']:
-                    print("¡Aprobado!")
-                else:
-                    print("Lamentablemente, el estudiante desaprobo.")
-                print("\n")
+            print(f"El estudiante {nombre_buscar} no fue encontrado.")
+    elif opcion_prev == 3:
+        try:
+            ID_buscar = int(input("Ingrese un ID: "))
+        except ValueError:
+            print("El ID tiene que ser números.")
+
+        for i in (estudiantes):
+            if ID_buscar == i['matricula']:
+                nombre  = i['nombre']
+                posicion = buscar_estudiante(estudiantes, nombre)
+        
+        if posicion != -1:
+            estudiantes.pop(posicion)
+            print(f"Estudiante id {ID_buscar} fue eliminado.")
         else:
-              print("No se encuentra registrado ningun estudiante")
-    elif validated_option == 6:
-        print("Hasta Luego!")
+            print(f"El estudiante id {ID_buscar} no fue encontrado.")
+
+    elif opcion_prev == 4:
+        actualizar_aprobacion(estudiantes)
+        print("El estado de aprobación fue actualizado.")
+    elif opcion_prev == 5:
+        actualizar_aprobacion(estudiantes)
+
+        for i in estudiantes:
+            print(f"Nombre: {i['nombre']}")
+            print(f"ID: {i['matricula']}")
+            print(f"Nota Promedio: {i['nota_promedio']}")
+            if i['estado_aprobación']:
+                print("Estado de aprobacion: Aprobado")
+            else:
+                print("Estado de aprobación: Desaprobado")
+    elif opcion_prev == 6:
+        print("Saliendo.")
         break
-    else:
-        print()
